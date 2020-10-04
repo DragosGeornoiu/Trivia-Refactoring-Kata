@@ -33,7 +33,6 @@ public class Player {
         return inPenaltyBox;
     }
 
-    // TODO unde e moveOut?!!
     public void putInPenaltyBox() {
         this.inPenaltyBox = true;
     }
