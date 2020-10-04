@@ -80,8 +80,9 @@ public class GameBetter implements IGame {
 
                 System.out.println(players.get(currentPlayer) + " is getting out of the penalty box");
                 places[currentPlayer] = places[currentPlayer] + roll;
-                if (places[currentPlayer] > 11)
+                if (places[currentPlayer] > 11) {
                     places[currentPlayer] = places[currentPlayer] - 12;
+                }
 
                 System.out.println(players.get(currentPlayer) +
                     "'s new location is " + places[currentPlayer]);
@@ -95,8 +96,9 @@ public class GameBetter implements IGame {
         } else {
 
             places[currentPlayer] = places[currentPlayer] + roll;
-            if (places[currentPlayer] > 11)
+            if (places[currentPlayer] > 11) {
                 places[currentPlayer] = places[currentPlayer] - 12;
+            }
 
             System.out.println(players.get(currentPlayer) +
                 "'s new location is " + places[currentPlayer]);
@@ -117,14 +119,16 @@ public class GameBetter implements IGame {
 
                 boolean winner = didPlayerWin();
                 currentPlayer++;
-                if (currentPlayer == players.size())
+                if (currentPlayer == players.size()) {
                     currentPlayer = 0;
+                }
 
                 return winner;
             } else {
                 currentPlayer++;
-                if (currentPlayer == players.size())
+                if (currentPlayer == players.size()) {
                     currentPlayer = 0;
+                }
                 return true;
             }
 
@@ -138,8 +142,9 @@ public class GameBetter implements IGame {
 
             boolean winner = didPlayerWin();
             currentPlayer++;
-            if (currentPlayer == players.size())
+            if (currentPlayer == players.size()) {
                 currentPlayer = 0;
+            }
 
             return winner;
         }
@@ -151,41 +156,55 @@ public class GameBetter implements IGame {
         inPenaltyBox[currentPlayer] = true;
 
         currentPlayer++;
-        if (currentPlayer == players.size())
+        if (currentPlayer == players.size()) {
             currentPlayer = 0;
+        }
         return true;
     }
 
     private void askQuestion() {
-        if (currentCategory() == "Pop")
+        if (currentCategory() == "Pop") {
             System.out.println(popQuestions.removeFirst());
-        if (currentCategory() == "Science")
+        }
+        if (currentCategory() == "Science") {
             System.out.println(scienceQuestions.removeFirst());
-        if (currentCategory() == "Sports")
+        }
+        if (currentCategory() == "Sports") {
             System.out.println(sportsQuestions.removeFirst());
-        if (currentCategory() == "Rock")
+        }
+        if (currentCategory() == "Rock") {
             System.out.println(rockQuestions.removeFirst());
+        }
     }
 
     private String currentCategory() {
-        if (places[currentPlayer] == 0)
+        if (places[currentPlayer] == 0) {
             return "Pop";
-        if (places[currentPlayer] == 4)
+        }
+        if (places[currentPlayer] == 4) {
             return "Pop";
-        if (places[currentPlayer] == 8)
+        }
+        if (places[currentPlayer] == 8) {
             return "Pop";
-        if (places[currentPlayer] == 1)
+        }
+        if (places[currentPlayer] == 1) {
             return "Science";
-        if (places[currentPlayer] == 5)
+        }
+        if (places[currentPlayer] == 5) {
             return "Science";
-        if (places[currentPlayer] == 9)
+        }
+        if (places[currentPlayer] == 9) {
             return "Science";
-        if (places[currentPlayer] == 2)
+        }
+        if (places[currentPlayer] == 2) {
             return "Sports";
-        if (places[currentPlayer] == 6)
+        }
+        if (places[currentPlayer] == 6) {
             return "Sports";
-        if (places[currentPlayer] == 10)
+        }
+        if (places[currentPlayer] == 10) {
             return "Sports";
+        }
         return "Rock";
     }
 

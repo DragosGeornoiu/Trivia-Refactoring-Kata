@@ -6,7 +6,6 @@
  */
 package ro.dragos.geornoiu;
 
-// @Value
 public class Player {
 
     //~ ----------------------------------------------------------------------------------------------------------------
@@ -14,13 +13,15 @@ public class Player {
     //~ ----------------------------------------------------------------------------------------------------------------
 
     private final String name;
-    private int place = 0;
+    private int place;
+    private int coins;
+    private boolean inPenaltyBox;
 
     //~ ----------------------------------------------------------------------------------------------------------------
     //~ Constructors 
     //~ ----------------------------------------------------------------------------------------------------------------
 
-    Player(String name) {
+    public Player(String name) {
         this.name = name;
     }
 
@@ -28,18 +29,37 @@ public class Player {
     //~ Methods 
     //~ ----------------------------------------------------------------------------------------------------------------
 
-    public String name() {
-        return name;
+    public boolean isInPenaltyBox() {
+        return inPenaltyBox;
     }
 
-    public int place() {
+    // TODO unde e moveOut?!!
+    public void putInPenaltyBox() {
+        this.inPenaltyBox = true;
+    }
+
+    public int getPlace() {
         return place;
     }
 
     public void move(int roll) {
+//              place = (place + roll) % 12;
         place += roll;
         if (place >= 12) {
             place -= 12;
         }
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCoins() {
+        return coins;
+    }
+
+    public void addCoin() {
+        coins++;
+    }
+
 }
