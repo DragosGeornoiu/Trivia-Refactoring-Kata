@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 
-public class GameBetter implements IGame {
+public class GameMock {
 
     //~ ----------------------------------------------------------------------------------------------------------------
     //~ Instance fields 
@@ -33,7 +33,7 @@ public class GameBetter implements IGame {
     //~ Constructors 
     //~ ----------------------------------------------------------------------------------------------------------------
 
-    public GameBetter() {
+    public GameMock() {
         for (int i = 0; i < 50; i++) {
             popQuestions.addLast("Pop Question " + i);
             scienceQuestions.addLast(("Science Question " + i));
@@ -108,7 +108,7 @@ public class GameBetter implements IGame {
 
     }
 
-    public boolean wasCorrectlyAnswered() {
+    public boolean onCorrectAnswer() {
         if (inPenaltyBox[currentPlayer]) {
             if (isGettingOutOfPenaltyBox) {
                 System.out.println("Answer was correct!!!!");
@@ -134,7 +134,7 @@ public class GameBetter implements IGame {
 
         } else {
 
-            System.out.println("Answer was corrent!!!!");
+            System.out.println("Answer was correct!!!!");
             purses[currentPlayer]++;
             System.out.println(players.get(currentPlayer) +
                 " now has " + purses[currentPlayer] +
@@ -150,7 +150,7 @@ public class GameBetter implements IGame {
         }
     }
 
-    public boolean wrongAnswer() {
+    public boolean onWrongAnswer() {
         System.out.println("Question was incorrectly answered");
         System.out.println(players.get(currentPlayer) + " was sent to the penalty box");
         inPenaltyBox[currentPlayer] = true;

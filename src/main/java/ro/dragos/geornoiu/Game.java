@@ -1,8 +1,8 @@
 /**
- *  Copyright Murex S.A.S., 2003-2020. All Rights Reserved.
- * 
- *  This software program is proprietary and confidential to Murex S.A.S and its affiliates ("Murex") and, without limiting the generality of the foregoing reservation of rights, shall not be accessed, used, reproduced or distributed without the
- *  express prior written consent of Murex and subject to the applicable Murex licensing terms. Any modification or removal of this copyright notice is expressly prohibited.
+ * Copyright Murex S.A.S., 2003-2020. All Rights Reserved.
+ * <p>
+ * This software program is proprietary and confidential to Murex S.A.S and its affiliates ("Murex") and, without limiting the generality of the foregoing reservation of rights, shall not be accessed, used, reproduced or distributed without the
+ * express prior written consent of Murex and subject to the applicable Murex licensing terms. Any modification or removal of this copyright notice is expressly prohibited.
  */
 package ro.dragos.geornoiu;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Game implements IGame {
+public class Game {
 
     //~ ----------------------------------------------------------------------------------------------------------------
     //~ Instance fields 
@@ -18,11 +18,8 @@ public class Game implements IGame {
 
     private final List<Player> players = new ArrayList<>();
 
-    private final boolean[] inPenaltyBox = new boolean[6];
-
     private Player currentPlayer;
-    private int currentPlayerIndex = 0;
-    private boolean isGettingOutOfPenaltyBox;
+    private int currentPlayerIndex = -1;
 
     private final GameQuestions gameQuestions;
 
@@ -38,7 +35,7 @@ public class Game implements IGame {
     //~ Methods 
     //~ ----------------------------------------------------------------------------------------------------------------
 
-    public boolean add(String playerName) {
+    public void add(String playerName) {
         Player player = new Player(playerName);
         players.add(player);
 
@@ -48,76 +45,48 @@ public class Game implements IGame {
 
         System.out.println(playerName + " was added");
         System.out.println("They are player number " + players.size());
-        return true;
     }
 
     public void roll(int roll) {
-
+        changeCurrentPlayer();
         System.out.println(currentPlayer.getName() + " is the current player");
         System.out.println("They have rolled a " + roll);
 
         if (currentPlayer.isInPenaltyBox()) {
-            if ((roll % 2) != 0) {
-                isGettingOutOfPenaltyBox = true;
-
+            currentPlayer.updateGettingOutOfPenaltyBox(roll);
+            if (currentPlayer.isGettingOutOfPenaltyBox()) {
                 System.out.println(currentPlayer.getName() + " is getting out of the penalty box");
-                currentPlayer.move(roll);
-
-                System.out.println(currentPlayer.getName() +
-                    "'s new location is " + currentPlayer.getPlace());
-                System.out.println("The category is " + currentCategory());
-                askQuestion(currentCategory());
+                takeTurn(roll);
             } else {
                 System.out.println(currentPlayer.getName() + " is not getting out of the penalty box");
-                isGettingOutOfPenaltyBox = false;
             }
-
         } else {
-            currentPlayer.move(roll);
-
-            System.out.println(currentPlayer.getName() + "'s new location is " + currentPlayer.getPlace());
-            System.out.println("The category is " + currentCategory());
-            askQuestion(currentCategory());
+            takeTurn(roll);
         }
-
     }
 
-    public boolean wasCorrectlyAnswered() {
+    private void takeTurn(int roll) {
+        currentPlayer.move(roll);
+        System.out.println(currentPlayer.getName() + "'s new location is " + currentPlayer.getPlace());
+        System.out.println("The category is " + currentCategory());
+        askQuestion(currentCategory());
+    }
 
-        if (currentPlayer.isInPenaltyBox()) {
-            if (isGettingOutOfPenaltyBox) {
-                System.out.println("Answer was correct!!!!");
-                incrementPurse(currentPlayer);
-
-                boolean winner = didPlayerWin();
-                changeCurrentPlayer();
-
-                return winner;
-            } else {
-                changeCurrentPlayer();
-                return true;
-            }
-
-        } else {
-
-            System.out.println("Answer was corrent!!!!");
+    public void onCorrectAnswer() {
+        if (!currentPlayer.isInPenaltyBox() || currentPlayer.isGettingOutOfPenaltyBox()) {
+            System.out.println("Answer was correct!!!!");
             incrementPurse(currentPlayer);
-
-            boolean winner = didPlayerWin();
-            changeCurrentPlayer();
-
-            return winner;
         }
     }
 
-    public boolean wrongAnswer() {
-        System.out.println("Question was incorrectly answered");
+    boolean isPlayerWin() {
+        return (!currentPlayer.isInPenaltyBox() || currentPlayer.isGettingOutOfPenaltyBox()) && currentPlayer.getPurse() == 6;
+    }
 
+    public void onWrongAnswer() {
+        System.out.println("Question was incorrectly answered");
         System.out.println(currentPlayer.getName() + " was sent to the penalty box");
         currentPlayer.putInPenaltyBox();
-
-        changeCurrentPlayer();
-        return true;
     }
 
     private void changeCurrentPlayer() {
@@ -127,9 +96,7 @@ public class Game implements IGame {
 
     private void incrementPurse(Player currentPlayer) {
         currentPlayer.incrementPurse();
-        System.out.println(currentPlayer.getName() +
-            " now has " + currentPlayer.getPurse() +
-            " Gold Coins.");
+        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getPurse() + " Gold Coins.");
     }
 
     private void askQuestion(String currentCategory) {
@@ -137,11 +104,7 @@ public class Game implements IGame {
     }
 
     private String currentCategory() {
-        int place = players.get(currentPlayerIndex).getPlace();
+        int place = currentPlayer.getPlace();
         return gameQuestions.getQuestionCategory(place);
-    }
-
-    private boolean didPlayerWin() {
-        return !(players.get(currentPlayerIndex).getPurse() == 6);
     }
 }

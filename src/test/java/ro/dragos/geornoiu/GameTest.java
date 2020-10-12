@@ -24,29 +24,53 @@ public class GameTest {
     @Test
     public void caracterizationTest() {
         for (int seed = 1; seed < 10_000; seed++) {
-            String expectedOutput = extractOutput(new Random(seed), new Game());
-            String actualOutput = extractOutput(new Random(seed), new GameBetter());
-            assertEquals(expectedOutput, actualOutput);
+            String actualOutput = extractOutput(new Random(seed), new Game());
+            String expectedOutput = extractExpectedOutput(new Random(seed), new GameMock());
+            assertEquals(actualOutput, expectedOutput);
         }
     }
 
-    private String extractOutput(Random rand, IGame aGame) {
+    private String extractOutput(Random rand, Game game) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try(PrintStream inmemory = new PrintStream(baos)) {
             System.setOut(inmemory);
 
-            aGame.add("Chet");
-            aGame.add("Pat");
-            aGame.add("Sue");
+            game.add("Chet");
+            game.add("Pat");
+            game.add("Sue");
+
+            do {
+                game.roll(rand.nextInt(5) + 1);
+
+                if (rand.nextInt(9) == 7) {
+                    game.onWrongAnswer();
+                } else {
+                    game.onCorrectAnswer();
+                }
+
+            } while (!game.isPlayerWin());
+        }
+        String output = new String(baos.toByteArray());
+        return output;
+    }
+    
+    private String extractExpectedOutput(Random rand, GameMock gameMock) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try(PrintStream inmemory = new PrintStream(baos)) {
+            System.setOut(inmemory);
+
+            gameMock.add("Chet");
+            gameMock.add("Pat");
+            gameMock.add("Sue");
 
             boolean notAWinner = false;
             do {
-                aGame.roll(rand.nextInt(5) + 1);
+                gameMock.roll(rand.nextInt(5) + 1);
 
                 if (rand.nextInt(9) == 7) {
-                    notAWinner = aGame.wrongAnswer();
+                    notAWinner = gameMock.onWrongAnswer();
                 } else {
-                    notAWinner = aGame.wasCorrectlyAnswered();
+                    notAWinner = gameMock.onCorrectAnswer();
                 }
 
             } while (notAWinner);
