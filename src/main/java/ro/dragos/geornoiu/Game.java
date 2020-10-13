@@ -16,18 +16,20 @@ public class Game {
     //~ Instance fields 
     //~ ----------------------------------------------------------------------------------------------------------------
 
-    private final List<Player> players = new ArrayList<>();
+    private final int NUMBER_OF_COINS_NEEDED_TO_WIN = 6;
 
-    private Player currentPlayer;
-    private int currentPlayerIndex = -1;
-
+    private int currentPlayerIndex;
+    private final List<Player> players;
     private final GameQuestions gameQuestions;
+    private Player currentPlayer;
 
     //~ ----------------------------------------------------------------------------------------------------------------
     //~ Constructors 
     //~ ----------------------------------------------------------------------------------------------------------------
 
     public Game() {
+        currentPlayerIndex = -1;
+        players = new ArrayList<>();
         gameQuestions = new GameQuestions();
     }
 
@@ -68,8 +70,8 @@ public class Game {
     private void takeTurn(int roll) {
         currentPlayer.move(roll);
         System.out.println(currentPlayer.getName() + "'s new location is " + currentPlayer.getPlace());
-        System.out.println("The category is " + currentCategory());
-        askQuestion(currentCategory());
+        System.out.println("The category is " + getCurrentCategory());
+        askQuestion(getCurrentCategory());
     }
 
     public void onCorrectAnswer() {
@@ -80,7 +82,7 @@ public class Game {
     }
 
     boolean isPlayerWin() {
-        return (!currentPlayer.isInPenaltyBox() || currentPlayer.isGettingOutOfPenaltyBox()) && currentPlayer.getPurse() == 6;
+        return (!currentPlayer.isInPenaltyBox() || currentPlayer.isGettingOutOfPenaltyBox()) && currentPlayer.getPurse() == NUMBER_OF_COINS_NEEDED_TO_WIN;
     }
 
     public void onWrongAnswer() {
@@ -103,7 +105,7 @@ public class Game {
         System.out.println(gameQuestions.retrieveQuestion(currentCategory));
     }
 
-    private String currentCategory() {
+    private String getCurrentCategory() {
         int place = currentPlayer.getPlace();
         return gameQuestions.getQuestionCategory(place);
     }
