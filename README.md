@@ -10,7 +10,7 @@ The Trivia Kata version used here is from Victor Rentea: https://github.com/vict
 The advantage of this version is that it provides a reliable test which transforms the execise into a refactoring kata instead of a legacy kata. 
 
 
-##Topics to be discussed while implementing
+## Topics to be discussed while implementing
 * Can we identify duplicated code and extract it into method?
 * What is a pure function? Can we create methods with no state and no side effect? 
 * Can we extract responsibilities or logic from the Game class into separate classes?
